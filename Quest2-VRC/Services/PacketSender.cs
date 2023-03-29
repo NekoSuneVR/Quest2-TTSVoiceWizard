@@ -1,5 +1,7 @@
 ﻿using Bespoke.Osc;
 using System;
+using System.IO;
+using System.Linq;
 using System.Net;
 using static Quest2_VRC.Logger;
 
@@ -11,11 +13,18 @@ namespace Quest2_VRC
 
 
         static public IPAddress IP = IPAddress.Loopback;
-        static readonly int Port = 9000;
-        static readonly IPEndPoint VRChat = new IPEndPoint(IP, Port);
+        static int Port = 9000;
+        static IPEndPoint VRChat = new IPEndPoint(IP, Port);
 
         static public void SendPacket(params VRChatMessage[] Params)
         {
+            var dic = File.ReadAllLines("vars.txt")
+                .Select(l => l.Split(new[] { '=' }))
+                .ToDictionary(s => s[0].Trim(), s => s[1].Trim());
+
+            Port = Int32.Parse(dic["SendPort"]);
+            VRChat = new IPEndPoint(IP, Port);
+
             foreach (var Param in Params)
             {
                 try
@@ -35,6 +44,10 @@ namespace Quest2_VRC
                         throw new Exception(String.Format("Param of type {0} is not supported by VRChat!", Param.Data.GetType()));
 
                     // Create a bundle that contains the target address and port (VRChat works on localhost:9000)
+
+                
+
+
                     OscBundle VRBundle = new OscBundle(VRChat);
 
                     // Create the message, and append the parameter to it

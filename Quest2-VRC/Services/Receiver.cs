@@ -13,13 +13,16 @@ namespace Quest2_VRC
 
     {
         static readonly int dataInt = 0;
-        static readonly int Port = 9001;
+        static int Port = 9001;
         public static async void Run()
         {
+      
+
             RGBControler.SendRGBData(dataInt); //Init OpenRGB
             var dic = File.ReadAllLines("vars.txt")
             .Select(l => l.Split(new[] { '=' }))
             .ToDictionary(s => s[0].Trim(), s => s[1].Trim());
+            Port = Int32.Parse(dic["ReceivePort"]);
             string Eyesmode = dic["Receive_addr"];
             string EyesmodeTest = dic["Receive_addr_test"];
             OscServer oscServer;
