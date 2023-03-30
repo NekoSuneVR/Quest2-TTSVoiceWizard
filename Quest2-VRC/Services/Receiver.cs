@@ -34,6 +34,21 @@ namespace Quest2_VRC
             oscServer.Start();
             Logger.LogToConsole("Make sure you have all effects disabled in OpenRGB");
         }
+        public static async void StopOSC() {
+            var dic = File.ReadAllLines("vars.txt")
+            .Select(l => l.Split(new[] { '=' }))
+            .ToDictionary(s => s[0].Trim(), s => s[1].Trim());
+            Port = Int32.Parse(dic["ReceivePort"]);
+            string Eyesmode = dic["Receive_addr"];
+            string EyesmodeTest = dic["Receive_addr_test"];
+            OscServer oscServer;
+            oscServer = new OscServer((Bespoke.Common.Net.TransportType)TransportType.Udp, IP, Port);
+            oscServer.FilterRegisteredMethods = true;
+            oscServer.RegisterMethod(Eyesmode);
+            oscServer.RegisterMethod(EyesmodeTest);
+            oscServer.Stop();
+            Logger.LogToConsole("OSC Stopped!");
+        }
 
         private static void oscServer_MessageReceived(object sender, OscMessageReceivedEventArgs e)
         {

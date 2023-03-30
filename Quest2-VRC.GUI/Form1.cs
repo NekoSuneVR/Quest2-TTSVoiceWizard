@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace Quest2_VRC
     public partial class Form1 : MaterialForm
 
     {
+        private CancellationTokenSource cts;
         public Form1()
         {
             InitializeComponent();
@@ -41,6 +43,21 @@ namespace Quest2_VRC
             materialSwitch1.Enabled = false;
             materialCheckbox2.Enabled = false;
             materialTextBox1.Enabled = false;
+            materialButton7.Enabled = true;
+        }
+
+        private void enableButtons()
+        {
+            materialButton1.Enabled = true;
+            materialButton2.Enabled = true;
+            materialButton3.Enabled = true;
+            materialButton4.Enabled = true;
+            materialButton5.Enabled = true;
+            materialButton6.Enabled = true;
+            materialSwitch1.Enabled = true;
+            materialCheckbox2.Enabled = true;
+            materialTextBox1.Enabled = true;
+            materialButton7.Enabled = false;
         }
 
 
@@ -161,7 +178,6 @@ namespace Quest2_VRC
         {
             materialLabel2.Text = "Status: Executing...";
             disableButtons();
-
             await Task.Run(() =>
             {
                 if (materialSwitch1.Checked == true)
@@ -331,6 +347,13 @@ namespace Quest2_VRC
         {
             Form2 f2 = new Form2();
             f2.ShowDialog();
+        }
+
+        private void materialButton7_Click(object sender, EventArgs e)
+        {
+            enableButtons();
+            materialLabel2.Text = "Status: Stopped...";
+            ADB.StopADB();
         }
     }
 }

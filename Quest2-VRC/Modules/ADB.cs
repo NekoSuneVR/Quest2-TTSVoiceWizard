@@ -122,7 +122,6 @@ namespace Quest2_VRC
         }
         public static void StartTCPIP()
         {
-
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -132,6 +131,19 @@ namespace Quest2_VRC
             process.Start();
 
         }
+
+        public static void StopADB()
+        {
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            //startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = "/C platform-tools\\adb.exe kill-server";
+            process.StartInfo = startInfo;
+            process.Start();
+            Receiver.StopOSC();
+        }
+
         public static string GetIP()
         {
             string deviceip = null;
